@@ -1,5 +1,5 @@
 /**
- *
+ * 日志记录器
  * @Author: ZengYou
  * @Date: 2024/7/23
  */
@@ -14,7 +14,7 @@ import (
 
 // CustomLogger 是一个使用zap的自定义GORM记录器
 type CustomLogger struct {
-	zapLogger *zap.Logger
+	ZapLogger *zap.Logger
 }
 
 // LogMode 设置日志级别
@@ -24,17 +24,17 @@ func (c *CustomLogger) LogMode(level logger.LogLevel) logger.Interface {
 
 // Info 记录信息级别消息
 func (c *CustomLogger) Info(ctx context.Context, msg string, data ...interface{}) {
-	c.zapLogger.Sugar().Infof(msg, data...)
+	c.ZapLogger.Sugar().Infof(msg, data...)
 }
 
 // Warn 日志警告级别消息
 func (c *CustomLogger) Warn(ctx context.Context, msg string, data ...interface{}) {
-	c.zapLogger.Sugar().Warnf(msg, data...)
+	c.ZapLogger.Sugar().Warnf(msg, data...)
 }
 
 // Error 记录错误级别消息
 func (c *CustomLogger) Error(ctx context.Context, msg string, data ...interface{}) {
-	c.zapLogger.Sugar().Errorf(msg, data...)
+	c.ZapLogger.Sugar().Errorf(msg, data...)
 }
 
 // Trace 记录 SQL 查询
@@ -42,14 +42,14 @@ func (c *CustomLogger) Trace(ctx context.Context, begin time.Time, fc func() (st
 	elapsed := time.Since(begin)
 	sql, rows := fc()
 	if err != nil {
-		c.zapLogger.Sugar().Errorw("SQL Error",
+		c.ZapLogger.Sugar().Errorw("SQL Error",
 			"duration", elapsed,
 			"rows", rows,
 			"sql", sql,
 			"error", err,
 		)
 	} else {
-		c.zapLogger.Sugar().Infow("SQL Query",
+		c.ZapLogger.Sugar().Infow("SQL Query",
 			"duration", elapsed,
 			"rows", rows,
 			"sql", sql,
