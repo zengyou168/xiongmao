@@ -9,21 +9,57 @@ import (
 	"context"
 	"fmt"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
-	"gorm.io/driver/mysql"
+	"gopkg.in/yaml.v3"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"os"
+	"panda/application"
+	"strings"
 	"time"
 )
 
 func CustomGorm(c *CustomLogger) *gorm.DB {
 
-	// 连接数据库
-	dsn := "root:root@tcp(127.0.0.1:3306)/panda?charset=utf8mb4&parseTime=True&loc=Local"
+	data, err := os.ReadFile("application/application.yaml")
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: c,
-	})
+	if err != nil {
+		c.Error(context.TODO(), "Error reading YAML file: %s\n", err)
+	}
+
+	var config application.Application
+
+	err = yaml.Unmarshal(data, &config)
+
+	if err != nil {
+		c.Error(context.TODO(), "Error parsing YAML file: %s\n", err)
+	}
+
+	database := config.Database
+	port := fmt.Sprint(database.Port)
+	dsn := ""
+
+	if database.Driver == "postgres" {
+		dsn = fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s",
+			database.User,
+			database.Passwd,
+			database.Addr,
+			fmt.Sprint(port),
+			database.DBName,
+		)
+	} else {
+		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+			database.User,
+			database.Passwd,
+			database.Addr,
+			fmt.Sprint(port),
+			database.DBName,
+		)
+	}
+
+	// 连接数据库
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: c})
 
 	if err != nil {
 		c.Error(context.TODO(), "failed to connect database: ", err)
@@ -31,6 +67,8 @@ func CustomGorm(c *CustomLogger) *gorm.DB {
 
 	// 自动迁移数据库
 	db.AutoMigrate(&User{})
+
+	///addTableComment(db, "users", "用户表")
 
 	// 创建 UserService 实例
 	userService := &UserService{DB: db}
@@ -49,7 +87,6 @@ func CustomGorm(c *CustomLogger) *gorm.DB {
 	fmt.Printf("User created: %+v\n", user)
 
 	return GormInit(db, err)
-
 }
 
 func GormInit(db *gorm.DB, err error) *gorm.DB {
@@ -69,16 +106,36 @@ func GormInit(db *gorm.DB, err error) *gorm.DB {
 	return db
 }
 
+// BeforeCreate 在创建记录之前生成没有破折号的 UUID
+func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
+
+	// 生成没有破折号的 UUID
+	uuidWithHyphens := uuid.NewString()
+
+	user.ID = strings.ReplaceAll(uuidWithHyphens, "-", "")
+
+	return
+}
+
+// addTableComment 为指定表添加备注
+func addTableComment(db *gorm.DB, tableName, comment string) {
+	sql := fmt.Sprintf("COMMENT ON TABLE %s IS '%s';", tableName, comment)
+	db.Exec(sql)
+	/*if err != nil {
+		log.Fatalf("添加表备注失败: %v", err)
+	}*/
+}
+
 // User 模型
 type User struct {
-	gorm.Model
-	Username string
+	ID       string `gorm:"type:char(32);primaryKey"`
+	Username string `gorm:"type:varchar(100);comment:用户姓名"`
 	Password string
 }
 
 // UserCreate 用于接收创建用户请求的数据
 type UserCreate struct {
-	Username string
+	Username string `gorm:"type:varchar(100);comment:用户姓名"`
 	Password string
 }
 
