@@ -2,28 +2,25 @@
 package db
 
 import (
-	"context"
 	"fmt"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"os"
 	"panda/config"
-	log2 "panda/pkg/log"
+	"panda/pkg/log"
 	"strings"
 	"time"
 )
 
-func CustomGorm(c *log2.CustomLogger) *gorm.DB {
+func CustomGorm() *gorm.DB {
 
 	data, err := os.ReadFile("config/config.yaml")
 
 	if err != nil {
-		c.Error(context.TODO(), "Error reading YAML file: %s\n", err)
+		//	c.Error(context.TODO(), "Error reading YAML file: %s\n", err)
 	}
 
 	var configInfo config.Application
@@ -31,7 +28,7 @@ func CustomGorm(c *log2.CustomLogger) *gorm.DB {
 	err = yaml.Unmarshal(data, &configInfo)
 
 	if err != nil {
-		c.Error(context.TODO(), "Error parsing YAML file: %s\n", err)
+		//c.Error(context.TODO(), "Error parsing YAML file: %s\n", err)
 	}
 
 	database := configInfo.Database
@@ -60,14 +57,16 @@ func CustomGorm(c *log2.CustomLogger) *gorm.DB {
 	}
 
 	if database.Log {
-		option.Logger = c
+		option.Logger = log.ZapSqlLog()
 	}
 
 	// 连接数据库
 	db, err := gorm.Open(dialector, option)
 
 	if err != nil {
-		c.Error(context.TODO(), "failed to connect database: ", err)
+		// sugar.info("failed to connect database", zap.Error(err))
+
+		//   sugar.Infof("服务启动")
 	}
 
 	// 自动迁移数据库
@@ -86,7 +85,7 @@ func CustomGorm(c *log2.CustomLogger) *gorm.DB {
 
 	user, err := userService.CreateUser(userCreate)
 	if err != nil {
-		c.Error(context.TODO(), "failed to create user: ", zap.Error(err))
+		//	c.Error(context.TODO(), "failed to create user: ", zap.Error(err))
 	}
 
 	fmt.Printf("User created: %+v\n", user)
@@ -96,7 +95,7 @@ func CustomGorm(c *log2.CustomLogger) *gorm.DB {
 
 func GormInit(db *gorm.DB, err error) *gorm.DB {
 	if err != nil {
-		log.Error("database start error", zap.Error(err))
+		//	log.Error("database start error", zap.Error(err))
 		os.Exit(0)
 		return nil
 	}
