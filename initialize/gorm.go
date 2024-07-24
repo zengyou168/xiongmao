@@ -1,8 +1,4 @@
-/**
- * 数据库驱动
- * @Author: ZengYou
- * @Date: 2024/7/23
- */
+// Package initialize 数据库驱动
 package initialize
 
 import (
@@ -12,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
+	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"os"
@@ -37,29 +34,36 @@ func CustomGorm(c *CustomLogger) *gorm.DB {
 	}
 
 	database := config.Database
-	port := fmt.Sprint(database.Port)
-	dsn := ""
+	option := &gorm.Config{}
+
+	var dialector gorm.Dialector
 
 	if database.Driver == "postgres" {
-		dsn = fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s",
+		dialector = postgres.Open(fmt.Sprintf(
+			"user=%s password=%s host=%s port=%d dbname=%s",
 			database.User,
 			database.Passwd,
 			database.Addr,
-			fmt.Sprint(port),
+			database.Port,
 			database.DBName,
-		)
+		))
 	} else {
-		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+		dialector = mysql.Open(fmt.Sprintf(
+			"%s:%s@tcp(%s:%d)/%s",
 			database.User,
 			database.Passwd,
 			database.Addr,
-			fmt.Sprint(port),
+			database.Port,
 			database.DBName,
-		)
+		))
+	}
+
+	if database.Log {
+		option.Logger = c
 	}
 
 	// 连接数据库
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: c})
+	db, err := gorm.Open(dialector, option)
 
 	if err != nil {
 		c.Error(context.TODO(), "failed to connect database: ", err)
@@ -107,7 +111,7 @@ func GormInit(db *gorm.DB, err error) *gorm.DB {
 }
 
 // BeforeCreate 在创建记录之前生成没有破折号的 UUID
-func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
+func (user *User) BeforeCreate(*gorm.DB) (err error) {
 
 	// 生成没有破折号的 UUID
 	uuidWithHyphens := uuid.NewString()

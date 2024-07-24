@@ -1,3 +1,4 @@
+# 配置文件
 server:
     port: 8080
 database:
@@ -7,3 +8,4 @@ database:
     addr: 127.0.0.1
     port: 5432
     dbName: panda
+    log: true

@@ -1,8 +1,4 @@
-/**
- *
- * @Author: ZengYou
- * @Date: 2024/7/23
- */
+// 项目启动
 package main
 
 import (
@@ -14,7 +10,9 @@ func main() {
 
 	zapLogger, _ := zap.NewProduction()
 
-	defer zapLogger.Sync()
+	defer func(zapLogger *zap.Logger) {
+		_ = zapLogger.Sync()
+	}(zapLogger)
 
 	// 创建自定义 GORM 记录器
 	customLogger := &initialize.CustomLogger{ZapLogger: zapLogger}

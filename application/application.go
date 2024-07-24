@@ -1,8 +1,4 @@
-/**
- *
- * @Author: ZengYou
- * @Date: 2024/7/23
- */
+// Package application 配置参数
 package application
 
 type Application struct {
@@ -17,5 +13,6 @@ type Application struct {
 		Addr   string `yaml:"addr"`
 		Port   int    `yaml:"port"`
 		DBName string `yaml:"dbName"`
+		Log    bool   `yaml:"log"`
 	} `yaml:"database"`
 }

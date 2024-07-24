@@ -1,8 +1,4 @@
-/**
- * 日志记录器
- * @Author: ZengYou
- * @Date: 2024/7/23
- */
+// Package initialize 日志记录器
 package initialize
 
 import (
