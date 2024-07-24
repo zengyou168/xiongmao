@@ -1,0 +1,26 @@
+panda/
+├── cmd/
+│   └── myapp/
+│       └── main.go      # 主程序入口
+├── config/
+│   └── config.go        # 配置文件
+├── internal/
+│   ├── data/
+│   │   └── data.go      # 数据模块
+│   ├── router/
+│   │   └── router.go    # 路由器
+│   ├── handler/
+│   │   └── handler.go   # 请求处理程序
+│   ├── service/
+│   │   └── service.go   # 业务逻辑
+│   ├── model/
+│   │   └── model.go     # 数据模型
+├── pkg/
+│   ├── log/
+│   │   └── log.go       # 日志实例化文件
+├── scripts/
+│   └── setup.sh         # 项目初始化脚本
+├── .env                 # 环境变量文件
+├── .gitignore           # Git忽略文件
+├── go.mod               # Go模块文件
+└── README.md            # 项目简介

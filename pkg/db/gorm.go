@@ -1,5 +1,5 @@
 // Package initialize 数据库驱动
-package initialize
+package db
 
 import (
 	"context"
@@ -12,28 +12,29 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"os"
-	"panda/application"
+	"panda/config"
+	log2 "panda/pkg/log"
 	"strings"
 	"time"
 )
 
-func CustomGorm(c *CustomLogger) *gorm.DB {
+func CustomGorm(c *log2.CustomLogger) *gorm.DB {
 
-	data, err := os.ReadFile("application/application.yaml")
+	data, err := os.ReadFile("config/config.yaml")
 
 	if err != nil {
 		c.Error(context.TODO(), "Error reading YAML file: %s\n", err)
 	}
 
-	var config application.Application
+	var configInfo config.Application
 
-	err = yaml.Unmarshal(data, &config)
+	err = yaml.Unmarshal(data, &configInfo)
 
 	if err != nil {
 		c.Error(context.TODO(), "Error parsing YAML file: %s\n", err)
 	}
 
-	database := config.Database
+	database := configInfo.Database
 	option := &gorm.Config{}
 
 	var dialector gorm.Dialector

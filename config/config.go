@@ -1,5 +1,5 @@
-// Package application 配置参数
-package application
+// Package config 配置参数
+package config
 
 type Application struct {
 	Server struct {

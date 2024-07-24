@@ -1,9 +1,10 @@
-// 项目启动
+// 主程序入口
 package main
 
 import (
 	"go.uber.org/zap"
-	"panda/initialize"
+	"panda/pkg/db"
+	"panda/pkg/log"
 )
 
 func main() {
@@ -15,9 +16,9 @@ func main() {
 	}(zapLogger)
 
 	// 创建自定义 GORM 记录器
-	customLogger := &initialize.CustomLogger{ZapLogger: zapLogger}
+	customLogger := &log.CustomLogger{ZapLogger: zapLogger}
 
 	// 使用自定义记录器初始化 GORM
-	initialize.CustomGorm(customLogger)
+	db.CustomGorm(customLogger)
 
 }
