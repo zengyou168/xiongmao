@@ -2,8 +2,9 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"panda/pkg/respond"
 )
 
 func Add(c *fiber.Ctx) error {
-	return c.SendString("Product Category: add")
+	return respond.OkData(c, "addrrrrrrrrrrrrrrrrrrr")
 }
