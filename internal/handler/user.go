@@ -2,9 +2,24 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"panda/internal/model"
+	"panda/internal/service"
 	"panda/pkg/respond"
 )
 
 func Add(c *fiber.Ctx) error {
-	return respond.OkData(c, "addrrrrrrrrrrrrrrrrrrr")
+
+	// 定义请求结构
+	var req model.User
+
+	// 解析请求体中的 JSON 数据
+	if err := c.BodyParser(&req); err != nil {
+		// 解析失败，返回错误响应
+		return respond.Error("解析请求体中的 JSON 数据失败")
+	}
+
+	users, _ := service.CreateUser(req)
+
+	return respond.OkData(c, users)
+
 }
