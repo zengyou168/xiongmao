@@ -3,6 +3,7 @@ package main
 
 import (
 	"panda/config"
+	"panda/internal/router"
 	"panda/pkg/db"
 	"panda/pkg/log"
 )
@@ -18,4 +19,6 @@ func main() {
 	// 实例化 GORM
 	db.Init()
 
+	// 实例化 router
+	router.Init()
 }

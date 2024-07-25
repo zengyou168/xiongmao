@@ -2,58 +2,58 @@
 package config
 
 import (
-	"fmt"
-	"gopkg.in/yaml.v3"
-	"os"
+    "fmt"
+    "gopkg.in/yaml.v3"
+    "os"
 )
 
-type ConfigData struct {
-	Server   ServerData   `yaml:"server"`
-	Database DatabaseData `yaml:"database"`
-	Log      LogData      `yaml:"log"`
+type configData struct {
+    Server   serverData   `yaml:"server"`
+    Database databaseData `yaml:"database"`
+    Log      logData      `yaml:"log"`
 }
 
-type ServerData struct {
-	Port int `yaml:"port"`
+type serverData struct {
+    Port int `yaml:"port"`
 }
 
-type DatabaseData struct {
-	Driver string `yaml:"driver"`
-	User   string `yaml:"user"`
-	Passwd string `yaml:"passwd"`
-	Addr   string `yaml:"addr"`
-	Port   int    `yaml:"port"`
-	DBName string `yaml:"dbName"`
+type databaseData struct {
+    Driver string `yaml:"driver"`
+    User   string `yaml:"user"`
+    Passwd string `yaml:"passwd"`
+    Addr   string `yaml:"addr"`
+    Port   int    `yaml:"port"`
+    DBName string `yaml:"dbName"`
 }
 
-type LogData struct {
-	Path  string `yaml:"path"`
-	Panda bool   `yaml:"panda"`
-	Sql   bool   `yaml:"sql"`
+type logData struct {
+    Path  string `yaml:"path"`
+    Panda bool   `yaml:"panda"`
+    Sql   bool   `yaml:"sql"`
 }
 
-var configDataVar *ConfigData
-var ServerVar *ServerData
-var DatabaseVar *DatabaseData
-var LogVar *LogData
+var configDataVar *configData
+var ServerVar *serverData
+var DatabaseVar *databaseData
+var LogVar *logData
 
 func Init() {
 
-	data, err := os.ReadFile("config/config.yaml")
+    data, err := os.ReadFile("config/config.yaml")
 
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
 
-	err = yaml.Unmarshal(data, &configDataVar)
+    err = yaml.Unmarshal(data, &configDataVar)
 
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
 
-	ServerVar = &configDataVar.Server
-	DatabaseVar = &configDataVar.Database
-	LogVar = &configDataVar.Log
+    ServerVar = &configDataVar.Server
+    DatabaseVar = &configDataVar.Database
+    LogVar = &configDataVar.Log
 }
