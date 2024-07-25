@@ -4,7 +4,6 @@ package db
 import (
 	"fmt"
 	"github.com/google/uuid"
-	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,26 +11,11 @@ import (
 	"panda/config"
 	"panda/pkg/log"
 	"strings"
-	"time"
 )
 
-func CustomGorm() *gorm.DB {
+func Init() *gorm.DB {
 
-	data, err := os.ReadFile("config/config.yaml")
-
-	if err != nil {
-		//	c.Error(context.TODO(), "Error reading YAML file: %s\n", err)
-	}
-
-	var configInfo config.Application
-
-	err = yaml.Unmarshal(data, &configInfo)
-
-	if err != nil {
-		//c.Error(context.TODO(), "Error parsing YAML file: %s\n", err)
-	}
-
-	database := configInfo.Database
+	database := config.DatabaseVar
 	option := &gorm.Config{}
 
 	var dialector gorm.Dialector
@@ -56,7 +40,7 @@ func CustomGorm() *gorm.DB {
 		))
 	}
 
-	if database.Log {
+	if config.LogVar.Panda {
 		option.Logger = log.ZapSqlLog()
 	}
 
@@ -64,9 +48,7 @@ func CustomGorm() *gorm.DB {
 	db, err := gorm.Open(dialector, option)
 
 	if err != nil {
-		// sugar.info("failed to connect database", zap.Error(err))
-
-		//   sugar.Infof("服务启动")
+		//  SugarGlobalVar.Errorf("failed to connect database：%v", err)
 	}
 
 	// 自动迁移数据库
@@ -84,29 +66,22 @@ func CustomGorm() *gorm.DB {
 	}
 
 	user, err := userService.CreateUser(userCreate)
+
 	if err != nil {
-		//	c.Error(context.TODO(), "failed to create user: ", zap.Error(err))
+		// log.Sugar.Errorf("failed to create user：%v", err)
 	}
 
 	fmt.Printf("User created: %+v\n", user)
 
-	return GormInit(db, err)
-}
-
-func GormInit(db *gorm.DB, err error) *gorm.DB {
 	if err != nil {
-		//	log.Error("database start error", zap.Error(err))
+
+		//  log.Sugar.Errorf("database start error：%v", err)
+
 		os.Exit(0)
+
 		return nil
 	}
-	sqlDB, _ := db.DB()
 
-	// 设置空闲连接池中连接的最大数量
-	sqlDB.SetMaxIdleConns(10)
-	// 设置打开数据库连接的最大数量。
-	sqlDB.SetMaxOpenConns(100)
-	// 设置了连接可复用的最大时间。
-	sqlDB.SetConnMaxLifetime(time.Hour)
 	return db
 }
 

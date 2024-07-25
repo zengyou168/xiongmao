@@ -2,50 +2,60 @@
 package log
 
 import (
-    "go.uber.org/zap"
-    "go.uber.org/zap/zapcore"
-    "os"
+	"fmt"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"os"
+	"panda/config"
+	"time"
 )
 
-// Sugar 定义全局 logger 变量
-var Sugar *zap.SugaredLogger
+var SugarVar *zap.SugaredLogger
 
 func Init() {
 
-    // 创建 JSON 编码器
-    encoderConfig := zapcore.EncoderConfig{
-        TimeKey:        "time",
-        LevelKey:       "level",
-        NameKey:        "logger",
-        CallerKey:      "caller",
-        MessageKey:     "msg",
-        StacktraceKey:  "stacktrace",
-        LineEnding:     zapcore.DefaultLineEnding,
-        EncodeLevel:    zapcore.CapitalLevelEncoder,
-        EncodeTime:     zapcore.ISO8601TimeEncoder,
-        EncodeDuration: zapcore.StringDurationEncoder,
-        EncodeCaller:   zapcore.ShortCallerEncoder,
-    }
+	// 创建 JSON 编码器
+	encoderConfig := zapcore.EncoderConfig{
+		TimeKey:        "time",
+		LevelKey:       "level",
+		NameKey:        "logger",
+		CallerKey:      "caller",
+		MessageKey:     "msg",
+		StacktraceKey:  "stacktrace",
+		LineEnding:     zapcore.DefaultLineEnding,
+		EncodeLevel:    zapcore.CapitalLevelEncoder,
+		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		EncodeDuration: zapcore.StringDurationEncoder,
+		EncodeCaller:   zapcore.ShortCallerEncoder,
+	}
 
-    encoder := zapcore.NewJSONEncoder(encoderConfig)
+	encoder := zapcore.NewJSONEncoder(encoderConfig)
 
-    // 创建文件输出
-    logFile, err := os.Create("logger/app.log")
+	path := config.LogVar.Path + "/panda"
 
-    if err != nil {
-        panic(err)
-    }
+	err := os.MkdirAll(path, 0755)
 
-    fileSyncer := zapcore.AddSync(logFile)
+	// 创建日志目录
+	if err != nil {
+		panic(fmt.Sprintf("Failed to create log directory: %v", err))
+	}
 
-    // 创建 Core
-    core := zapcore.NewCore(encoder, fileSyncer, zap.DebugLevel)
+	// 动态生成文件名
+	currentTime := time.Now().Format("2006-01-02")
+	fileName := fmt.Sprintf(path+"/%s.json", currentTime)
 
-    // 创建 Logger
-    logger := zap.New(core)
+	// 创建文件输出
+	file, _ := os.Create(fileName)
+	fileSyncer := zapcore.AddSync(file)
 
-    // 获取 Sugar Logger 用于更方便的日志打印
-    Sugar = logger.Sugar()
+	// 创建 Core
+	core := zapcore.NewCore(encoder, fileSyncer, zap.DebugLevel)
 
-    defer Sugar.Sync()
+	// 创建 Logger
+	zapLogger := zap.New(core)
+
+	// 获取 Sugar Logger 用于更方便的日志打印
+	SugarVar = zapLogger.Sugar()
+
+	defer SugarVar.Sync()
 }

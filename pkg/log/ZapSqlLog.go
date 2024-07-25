@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gorm.io/gorm/logger"
 	"os"
+	"panda/config"
 	"time"
 )
 
@@ -41,7 +42,7 @@ func ZapSqlLog() *ZapGormLogger {
 	// 创建 JSON Encoder
 	jsonEncoder := zapcore.NewJSONEncoder(jsonEncoderConfig)
 
-	path := "logger/sql"
+	path := config.LogVar.Path + "/sql"
 
 	err := os.MkdirAll(path, 0755)
 

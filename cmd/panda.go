@@ -2,16 +2,20 @@
 package main
 
 import (
-    "panda/pkg/db"
-    "panda/pkg/log"
+	"panda/config"
+	"panda/pkg/db"
+	"panda/pkg/log"
 )
 
 func main() {
 
-    // 实例化 zap 日志
-    log.Init()
+	// 实例化项目配置
+	config.Init()
 
-    // 使用自定义记录器初始化 GORM
-    db.CustomGorm()
+	// 实例化 zap 日志
+	log.Init()
+
+	// 实例化 GORM
+	db.Init()
 
 }
