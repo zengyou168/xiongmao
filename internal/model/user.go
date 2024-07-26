@@ -2,21 +2,23 @@ package model
 
 import "panda/pkg/custom"
 
-// User 模型
+// User 用户模型
 type User struct {
 	custom.Model
 	Name string `gorm:"type:varchar(100);comment:姓名" json:"name,omitempty"`
 	Pwd  string `gorm:"type:varchar(100);comment:密码" json:"pwd,omitempty"`
 }
 
+// UserLoginParam 用户登录请求参数
 type UserLoginParam struct {
 	Name string
 	Pwd  string
 }
 
+// UserLoginVO 用户登录返回数据
 type UserLoginVO struct {
-	Name string `json:"name,omitempty"`
-	Pwd  string `json:"pwd,omitempty"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 // UserCreate 用于接收创建用户请求的数据
