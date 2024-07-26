@@ -11,6 +11,7 @@ type configData struct {
 	Server   serverData   `yaml:"server"`
 	Database databaseData `yaml:"database"`
 	Log      logData      `yaml:"log"`
+	Casbin   casbinData   `yaml:"casbin"`
 }
 
 type serverData struct {
@@ -32,10 +33,15 @@ type logData struct {
 	Sql   bool   `yaml:"sql"`
 }
 
+type casbinData struct {
+	SecretKey string `yaml:"secretKey"`
+}
+
 var configDataVar *configData
 var ServerVar *serverData
 var DatabaseVar *databaseData
 var LogVar *logData
+var CasbinVar *casbinData
 
 func Init() {
 
@@ -56,4 +62,5 @@ func Init() {
 	ServerVar = &configDataVar.Server
 	DatabaseVar = &configDataVar.Database
 	LogVar = &configDataVar.Log
+	CasbinVar = &configDataVar.Casbin
 }

@@ -2,23 +2,75 @@
 package router
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"panda/config"
-	"panda/pkg/respond"
-	"strconv"
+    "github.com/casbin/casbin/v2"
+    gormadapter "github.com/casbin/gorm-adapter/v3"
+    "github.com/gofiber/fiber/v2"
+    "github.com/golang-jwt/jwt/v5"
+    "panda/config"
+    "panda/pkg/db"
+    "panda/pkg/respond"
+    "sort"
+    "strconv"
+    "strings"
 )
+
+var jwtKey = []byte("your_secret_key")
+var enforcer *casbin.Enforcer
 
 func Init() {
 
-	app := fiber.New(fiber.Config{
-		ErrorHandler: respond.ErrorHandler, // 设置全局错误处理函数
-	})
+    app := fiber.New(fiber.Config{
+        ErrorHandler: respond.ErrorHandler, // 设置全局错误处理函数
+    })
 
-	user(app)
+    // 初始化 Casbin
+    adapter, _ := gormadapter.NewAdapterByDB(db.Gorm)
+    enforcer, _ = casbin.NewEnforcer("pkg/casbin/model.conf", adapter)
+    _ = enforcer.LoadPolicy()
 
-	err := app.Listen(":" + strconv.Itoa(config.ServerVar.Port))
+    // JWT身份验证中间件
+    app.Use(func(c *fiber.Ctx) error {
 
-	if err != nil {
-		panic(err)
-	}
+        url := c.OriginalURL()
+        avoidLogin := []string{"/user/login"} // 免登录
+
+        // 排序数组
+        sort.Strings(avoidLogin)
+
+        // 使用二分查找
+        search := sort.SearchStrings(avoidLogin, url)
+
+        if search < len(avoidLogin) && avoidLogin[search] == url {
+            return c.Next()
+        }
+
+        tokenStr := c.Get("Authorization")
+
+        if tokenStr == "" || !strings.HasPrefix(tokenStr, "Bearer ") {
+            return respond.ErrorCode(respond.TokenExpire, respond.TokenExpireMsg)
+        }
+
+        tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
+        claims := jwt.MapClaims{}
+
+        token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+            return jwtKey, nil
+        })
+
+        if err != nil || !token.Valid {
+            return respond.ErrorCode(respond.TokenExpire, respond.TokenExpireMsg)
+        }
+
+        c.Locals("user", claims)
+
+        return c.Next()
+    })
+
+    user(app)
+
+    err := app.Listen(":" + strconv.Itoa(config.ServerVar.Port))
+
+    if err != nil {
+        panic(err)
+    }
 }

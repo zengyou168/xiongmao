@@ -10,6 +10,9 @@ database:
     port: 5432
     dbName: panda
 
+casbin:
+    secretKey: panda
+
 log:
     path: logger
     panda: true

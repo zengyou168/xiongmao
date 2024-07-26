@@ -5,6 +5,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+const (
+	TokenExpire    = 1      // token过期
+	TokenExpireMsg = "登录过期" // token过期
+)
+
 // ErrorData 定义自定义错误类型
 type ErrorData struct {
 	Code int

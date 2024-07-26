@@ -9,8 +9,8 @@ import (
 func user(app *fiber.App) {
 
 	userRouter := app.Group("user")
-
 	{
-		userRouter.Post("create", handler.Add) // 用户登录
+		userRouter.Post("login", handler.UserLogin) // 用户登录
 	}
+
 }

@@ -11,8 +11,6 @@ type Response struct {
 	Data interface{} `json:"data"`
 }
 
-const ()
-
 // Ok 函数返回一个成功响应
 func Ok(c *fiber.Ctx) error {
 	return respond(c, 0, "", nil)
