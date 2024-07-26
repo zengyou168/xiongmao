@@ -31,6 +31,13 @@ func Init() {
     // JWT身份验证中间件
     app.Use(func(c *fiber.Ctx) error {
 
+        // 全局捕获信息并返回，注意：在此后执行的方法才会捕获，如果有此之前执行的方法，想捕获时，把此方法放在要捕获的方法之前，或者复制一份过去
+        defer func() {
+            if r := recover(); r != nil {
+                _ = c.JSON(r)
+            }
+        }()
+
         url := c.OriginalURL()
         avoidLogin := []string{"/user/login"} // 免登录
 

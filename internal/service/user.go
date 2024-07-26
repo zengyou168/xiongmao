@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"panda/internal/model"
 	"panda/pkg/db"
@@ -8,14 +10,39 @@ import (
 	"panda/pkg/utils"
 )
 
-type User struct {
+type user struct {
 	model.User
 }
 
-// CreateUser 创建新用户
-func CreateUser(user model.User) (ModelVO, error) {
+// Login 用户登录
+func Login(req model.UserLoginParam) model.UserLoginVO {
 
-	localUser := User{User: user}
+	var user user
+
+	result := db.Gorm.Where("name = ?", req.Name).First(&user)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		panic(respond.Error("用户或密码错误"))
+	}
+
+	err := bcrypt.CompareHashAndPassword([]byte(user.Pwd), []byte(req.Pwd))
+
+	if err != nil {
+		panic(respond.Error("用户或密码错误..."))
+	}
+
+	userLoginVO := model.UserLoginVO{
+		Name: user.Name,
+		Pwd:  user.Pwd,
+	}
+
+	return userLoginVO
+}
+
+// CreateUser 创建新用户
+func CreateUser(user1 model.User) (ModelVO, error) {
+
+	localUser := user{User: user1}
 
 	// 创建新用户
 
@@ -37,7 +64,7 @@ type ModelVO struct {
 }
 
 // ToDTO converts a Model to a ModelDTO with formatted dates
-func (m User) ModelVO11() ModelVO {
+func (m user) ModelVO11() ModelVO {
 	return ModelVO{
 		ID:        m.ID,
 		Name:      m.Name,
@@ -52,7 +79,7 @@ func (m User) ModelVO11() ModelVO {
 	}
 }
 
-func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
+func (user *user) BeforeCreate(tx *gorm.DB) (err error) {
 
 	user.ID = utils.UUID()
 

@@ -9,6 +9,16 @@ type User struct {
 	Pwd  string `gorm:"type:varchar(100);comment:密码" json:"pwd,omitempty"`
 }
 
+type UserLoginParam struct {
+	Name string
+	Pwd  string
+}
+
+type UserLoginVO struct {
+	Name string `json:"name,omitempty"`
+	Pwd  string `json:"pwd,omitempty"`
+}
+
 // UserCreate 用于接收创建用户请求的数据
 type UserCreate struct {
 	Username string `gorm:"type:varchar(100);comment:用户姓名"`
