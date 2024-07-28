@@ -1,4 +1,4 @@
-module panda
+module xiongmao
 
 go 1.22.5
 
