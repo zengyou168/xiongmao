@@ -12,8 +12,8 @@ const (
 
 // ErrorData 定义自定义错误类型
 type ErrorData struct {
-    Code int    `json:"code"`
-    Msg  string `json:"msg"`
+    Code int    `json:"code,omitempty"`
+    Msg  string `json:"msg,omitempty"`
 }
 
 func Error(msg string) *ErrorData {
