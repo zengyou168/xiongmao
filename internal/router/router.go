@@ -72,7 +72,7 @@ func Init() {
 		return c.Next()
 	})
 
-	user(app)
+	admin(app)
 
 	err := app.Listen(":" + strconv.Itoa(config.ServerVar.Port))
 

@@ -7,10 +7,10 @@ import (
 	"panda/pkg/respond"
 )
 
-// UserLogin 用户登录
-func UserLogin(c *fiber.Ctx) error {
+// AdminLogin 管理员登录
+func AdminLogin(c *fiber.Ctx) error {
 
-	var req model.UserLoginParam
+	var req model.AdminLoginParam
 
 	if err := c.BodyParser(&req); err != nil {
 		panic(respond.Error("参数错误"))
@@ -19,10 +19,10 @@ func UserLogin(c *fiber.Ctx) error {
 	return respond.OkData(c, service.Login(req))
 }
 
-// UserAdd 用户添加
-func UserAdd(c *fiber.Ctx) error {
+// AdminAdd 管理员添加
+func AdminAdd(c *fiber.Ctx) error {
 
-	var req model.UserAddParam
+	var req model.AdminAddParam
 
 	if err := c.BodyParser(&req); err != nil {
 		panic(respond.Error("参数错误"))
