@@ -6,6 +6,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"net/url"
 	"panda/config"
 	"panda/internal/model"
 	"panda/pkg/log"
@@ -22,21 +23,23 @@ func Init() {
 
 	if database.Driver == "postgres" {
 		dialector = postgres.Open(fmt.Sprintf(
-			"user=%s password=%s host=%s port=%d dbname=%s",
+			"user=%s password=%s host=%s port=%d dbname=%s TimeZone=%s",
 			database.User,
 			database.Passwd,
 			database.Addr,
 			database.Port,
 			database.DBName,
+			database.Zone,
 		))
 	} else {
 		dialector = mysql.Open(fmt.Sprintf(
-			"%s:%s@tcp(%s:%d)/%s",
+			"%s:%s@tcp(%s:%d)/%s?loc=%s",
 			database.User,
 			database.Passwd,
 			database.Addr,
 			database.Port,
 			database.DBName,
+			url.QueryEscape(database.Zone),
 		))
 	}
 

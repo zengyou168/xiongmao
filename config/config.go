@@ -25,6 +25,7 @@ type databaseData struct {
 	Addr   string `yaml:"addr"`
 	Port   int    `yaml:"port"`
 	DBName string `yaml:"dbName"`
+	Zone   string `yaml:"zone"`
 }
 
 type logData struct {

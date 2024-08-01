@@ -3,15 +3,16 @@ server:
     port: 3000
 
 database:
-    driver: postgres
-    user: postgres
-    passwd: postgres
+    driver: mysql
+    user: root
+    passwd: root
     addr: 127.0.0.1
-    port: 5432
-    dbName: panda
+    port: 3306
+    dbName: xiongmao
+    zone: Asia/Shanghai
 
 casbin:
-    secretKey: panda
+    secretKey: xiongmao
 
 log:
     path: logger

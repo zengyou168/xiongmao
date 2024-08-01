@@ -38,7 +38,7 @@ func Init() {
 		}()
 
 		url := c.OriginalURL()
-		avoidLogin := []string{"/user/login"} // 免登录
+		avoidLogin := []string{"/admin/login"} // 免登录
 
 		// 排序数组
 		sort.Strings(avoidLogin)
