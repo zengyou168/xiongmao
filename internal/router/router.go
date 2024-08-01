@@ -14,7 +14,6 @@ import (
 	"strings"
 )
 
-var jwtKey = []byte("your_secret_key")
 var enforcer *casbin.Enforcer
 
 func Init() {
@@ -54,14 +53,14 @@ func Init() {
 		tokenStr := c.Get("Authorization")
 
 		if tokenStr == "" || !strings.HasPrefix(tokenStr, "Bearer ") {
-			return respond.ErrorCode(respond.TokenExpire, respond.TokenExpireMsg)
+			return respond.ErrorCode(respond.TokenExpire, tokenStr)
 		}
 
 		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
 		claims := jwt.MapClaims{}
 
 		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
+			return config.CasbinSecretKey, nil
 		})
 
 		if err != nil || !token.Valid {

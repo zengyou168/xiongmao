@@ -11,6 +11,7 @@ func user(app *fiber.App) {
 	userRouter := app.Group("user")
 	{
 		userRouter.Post("login", handler.UserLogin) // 用户登录
+		userRouter.Post("add", handler.UserAdd)     // 用户添加
 	}
 
 }

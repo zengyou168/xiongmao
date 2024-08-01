@@ -17,8 +17,9 @@ type UserLoginParam struct {
 
 // UserLoginVO 用户登录返回数据
 type UserLoginVO struct {
-    ID   string `json:"id"`
-    Name string `json:"name"`
+    ID    string `json:"id"`
+    Name  string `json:"name"`
+    Token string `json:"token"`
 }
 
 // UserAddParam 用户添加请求参数

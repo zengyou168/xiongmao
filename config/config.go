@@ -41,7 +41,7 @@ var configDataVar *configData
 var ServerVar *serverData
 var DatabaseVar *databaseData
 var LogVar *logData
-var CasbinVar *casbinData
+var CasbinSecretKey []byte
 
 func Init() {
 
@@ -62,5 +62,5 @@ func Init() {
 	ServerVar = &configDataVar.Server
 	DatabaseVar = &configDataVar.Database
 	LogVar = &configDataVar.Log
-	CasbinVar = &configDataVar.Casbin
+	CasbinSecretKey = []byte(configDataVar.Casbin.SecretKey)
 }
