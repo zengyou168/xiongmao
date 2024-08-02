@@ -1,4 +1,4 @@
-// Package initialize 数据库驱动
+// Package db 数据库驱动
 package db
 
 import (
@@ -7,9 +7,9 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"net/url"
-	"panda/config"
-	"panda/internal/model"
-	"panda/pkg/log"
+	"xiongmao/config"
+	"xiongmao/internal/model"
+	"xiongmao/pkg/log"
 )
 
 var Gorm *gorm.DB
@@ -51,17 +51,17 @@ func Init() {
 	db, err := gorm.Open(dialector, option)
 
 	if err != nil {
-		//  SugarGlobalVar.Errorf("failed to connect database：%v", err)
+		log.SugarVar.Errorf("连接数据库：%v", err)
 	}
 
 	// 自动迁移数据库
-	db.AutoMigrate(&model.Admin{})
-
-	addTableComment(db, "admin", "管理员")
+	err = db.AutoMigrate(&model.Admin{})
 
 	if err != nil {
-		log.SugarVar.Errorf("database start error：%v", err)
+		log.SugarVar.Errorf("自动迁移数据库：%v", err)
 	}
+
+	addTableComment(db, "admin", "管理员")
 
 	Gorm = db
 }

@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"panda/internal/model"
-	"panda/internal/service"
-	"panda/pkg/respond"
+    "xiongmao/internal/model"
+    "xiongmao/internal/service"
+    "xiongmao/pkg/respond"
 )
 
 // AdminLogin 管理员登录

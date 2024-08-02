@@ -3,7 +3,7 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"panda/internal/handler"
+    "xiongmao/internal/handler"
 )
 
 func admin(app *fiber.App) {

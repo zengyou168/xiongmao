@@ -8,8 +8,8 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gorm.io/gorm/logger"
 	"os"
-	"panda/config"
 	"time"
+	"xiongmao/config"
 )
 
 // ZapGormLogger 是使用 zap 的 GORM 的自定义记录器

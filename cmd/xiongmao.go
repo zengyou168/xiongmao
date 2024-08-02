@@ -2,10 +2,10 @@
 package main
 
 import (
-	"panda/config"
-	"panda/internal/router"
-	"panda/pkg/db"
-	"panda/pkg/log"
+	"xiongmao/config"
+	"xiongmao/internal/router"
+	"xiongmao/pkg/db"
+	"xiongmao/pkg/log"
 )
 
 func main() {

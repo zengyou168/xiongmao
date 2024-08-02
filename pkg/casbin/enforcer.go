@@ -3,17 +3,17 @@ package casbin
 import (
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
-	"panda/pkg/db"
+	"xiongmao/pkg/db"
 )
 
 var jwtKey = []byte("your_secret_key")
 var enforcer *casbin.Enforcer
 
-func main() {
+func Init() {
 
-	// Initialize Casbin
+	// 初始化 Casbin
 	adapter, _ := gormadapter.NewAdapterByDB(db.Gorm)
 	enforcer, _ = casbin.NewEnforcer("model.conf", adapter)
-	enforcer.LoadPolicy()
+	_ = enforcer.LoadPolicy()
 
 }

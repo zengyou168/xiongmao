@@ -3,15 +3,13 @@ package router
 
 import (
 	"github.com/casbin/casbin/v2"
-	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"panda/config"
-	"panda/pkg/db"
-	"panda/pkg/respond"
 	"sort"
 	"strconv"
 	"strings"
+	"xiongmao/config"
+	"xiongmao/pkg/respond"
 )
 
 var enforcer *casbin.Enforcer
@@ -21,11 +19,6 @@ func Init() {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: respond.ErrorHandler, // 设置全局错误处理函数
 	})
-
-	// 初始化 Casbin
-	adapter, _ := gormadapter.NewAdapterByDB(db.Gorm)
-	enforcer, _ = casbin.NewEnforcer("pkg/casbin/model.conf", adapter)
-	_ = enforcer.LoadPolicy()
 
 	// JWT身份验证中间件
 	app.Use(func(c *fiber.Ctx) error {
@@ -66,6 +59,8 @@ func Init() {
 		if err != nil || !token.Valid {
 			return respond.ErrorCode(respond.TokenExpire, respond.TokenExpireMsg)
 		}
+
+		//casbin.Init()
 
 		c.Locals("user", claims)
 
