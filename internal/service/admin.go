@@ -60,6 +60,8 @@ func Login(req model.AdminLoginParam) model.AdminLoginVO {
 // Add 管理员添加
 func Add(req model.AdminAddParam) {
 
+	tx := db.Gorm.Begin()
+
 	pwd := req.Pwd
 
 	if pwd == "" {
@@ -87,11 +89,31 @@ func Add(req model.AdminAddParam) {
 	admin.Name = name
 	admin.Pwd = pwd
 
-	r = db.Gorm.Create(&admin)
+	r = tx.Create(&admin)
 
 	if r.Error != nil {
 		panic(respond.Error("保存失败"))
 	}
+
+	tx.Rollback()
+
+	// 添加角色权限策略
+	/*_, err = casbin.EnforcerVar.AddPolicy("admin", "/data1", "GET")
+	  if err != nil {
+	  	log.SugarVar.Error("Add policy error: %v", err)
+	  }*/
+
+	// 添加角色继承关系示例
+	/*_, err = casbin.EnforcerVar.AddGroupingPolicy("alice", "admin")
+	  if err != nil {
+	  	log.SugarVar.Error("添加分组策略错误", err)
+	  }
+
+	  // 保存策略
+	  err = casbin.EnforcerVar.SavePolicy()
+	  if err != nil {
+	  	log.SugarVar.Error("保存策略错误", err)
+	  }*/
 }
 
 type ModelVO struct {

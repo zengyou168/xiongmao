@@ -31,7 +31,7 @@ func Init() {
 
 	encoder := zapcore.NewJSONEncoder(encoderConfig)
 
-	path := config.LogVar.Path + "/panda"
+	path := config.LogVar.Path + "/xiongmao"
 
 	err := os.MkdirAll(path, 0755)
 
