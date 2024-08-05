@@ -140,7 +140,8 @@ func (param admin) ModelVO11() ModelVO {
 	}
 }
 
-func (param *admin) BeforeCreate(tx *gorm.DB) (err error) {
+// BeforeCreate 请不到删除 db *gorm.DB，要不然重写不了id值，用于添加逻辑
+func (param *admin) BeforeCreate(db *gorm.DB) (err error) {
 
 	param.ID = utils.UUID()
 
