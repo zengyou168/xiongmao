@@ -22,6 +22,7 @@ go语言gofiber脚手架
 #### 安装教程
 
 1.  切换 GO 镜像
+
     go env -w GOPROXY=https://goproxy.cn,direct
 
     清除缓存 go clean -modcache
