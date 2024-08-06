@@ -43,7 +43,7 @@ func Init() {
 		))
 	}
 
-	if config.LogVar.Panda {
+	if config.LogVar.Xiongmao {
 		option.Logger = log.ZapSqlLog()
 	}
 

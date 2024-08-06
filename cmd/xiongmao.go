@@ -6,6 +6,7 @@ import (
 	"xiongmao/internal/router"
 	"xiongmao/pkg/db"
 	"xiongmao/pkg/log"
+	"xiongmao/pkg/mqtt"
 )
 
 func main() {
@@ -19,6 +20,9 @@ func main() {
 	// 实例化 GORM
 	db.Init()
 
-	// 实例化 router
+	// 实例化 mqtt，项目用不到 MQTT 就注释掉
+	mqtt.Init()
+
+	// 实例化 router，这个一定要放在最后
 	router.Init()
 }

@@ -14,7 +14,14 @@ database:
 casbin:
     secretKey: xiongmao
 
+mqtt:
+    server: tcp://127.0.0.1:1883
+    clientID: xiongmao
+    username: admin
+    password: public
+    topic: xiongmao/+
+
 log:
     path: logger
-    panda: true
+    xiongmao: true
     sql: true
