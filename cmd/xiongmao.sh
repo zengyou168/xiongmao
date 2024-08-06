@@ -97,7 +97,7 @@ func ${fileName}(app *fiber.App) {
 }"
 # router 结束
 
-# service 结束
+# service 开始
 serviceContent="package $(basename $service)
 
 import (
@@ -140,7 +140,7 @@ func (param *${fileName}) BeforeCreate(db *gorm.DB) (err error) {
 
 	return
 }"
-# model 结束
+# service 结束
 
 # 在目录中创建一个main.go文件并写入内容
 echo "$handlerContent" > "$handler/$fileName.go"
