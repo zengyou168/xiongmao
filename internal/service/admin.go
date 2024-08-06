@@ -16,8 +16,8 @@ type admin struct {
 	model.Admin
 }
 
-// Login 管理员登录
-func Login(req model.AdminLoginParam) model.AdminLoginVO {
+// AdminLogin 管理员登录
+func AdminLogin(req model.AdminLoginParam) model.AdminLoginVO {
 
 	var admin admin
 
@@ -57,8 +57,8 @@ func Login(req model.AdminLoginParam) model.AdminLoginVO {
 	return adminLoginVO
 }
 
-// Add 管理员添加
-func Add(req model.AdminAddParam) {
+// AdminAdd 管理员添加
+func AdminAdd(req model.AdminAddParam) {
 
 	tx := db.Gorm.Begin()
 
