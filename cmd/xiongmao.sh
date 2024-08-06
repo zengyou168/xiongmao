@@ -10,7 +10,7 @@ if [ -z "$fileName" ]; then
 fi
 
 # 将文件名的首字母转为大写
-capitalizedFileName=$(echo "${fileName^}")
+capitalizedFileName="${fileName^}"
 
 handler="../internal/handler"
 model="../internal/model"
