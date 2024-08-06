@@ -1,7 +1,8 @@
 panda/
 ├── cmd/
-│   └── myapp/
-│       └── main.go      # 主程序入口
+│   └── xiongmao.go # 主程序入口
+│   └── xiongmao.sh # 文件快捷生成，在 handler、model、router、service 这4个目录生成 go 文件，Windows 用 Git Bash 执行
+│
 ├── config/
 │   └── config.go        # 配置文件
 ├── internal/

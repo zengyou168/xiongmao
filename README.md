@@ -1,7 +1,7 @@
 # panda
 
 #### 介绍
-go语言gofiber脚手架
+熊猫基于gofiber、uuid、zap、yaml、gorm、jwt搭建的框架（脚手架）
 
 #### 相关技术
 | 序号 | 名称                          | 描述 |
@@ -35,7 +35,9 @@ go语言gofiber脚手架
 3.  xxxx
 
 #### 使用说明
-[接口文档](https://doc.apipost.net/docs/2ef94399bc66000)
+1.  [接口文档](https://doc.apipost.net/docs/2ef94399bc66000)
+
+2.  cmd/xiongmao.sh 文件快捷生成，在 handler、model、router、service 这4个目录生成 go 文件，Windows 用 Git Bash 执行
 
 #### 参与贡献
 
