@@ -33,7 +33,16 @@ func AdminAdd(c *fiber.Ctx) error {
 	return respond.Ok(c)
 }
 
-// RuleAdd 角色添加
-func RuleAdd(c *fiber.Ctx) error {
+// RoleAdd 角色添加
+func RoleAdd(c *fiber.Ctx) error {
+
+	var req model.RoleAddParam
+
+	if err := c.BodyParser(&req); err != nil {
+		panic(respond.Error("参数错误"))
+	}
+
+	service.RoleAdd(req)
+
 	return respond.Ok(c)
 }
