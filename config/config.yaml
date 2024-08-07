@@ -11,8 +11,8 @@ database:
     dbName: xiongmao
     zone: Asia/Shanghai
 
-casbin:
-    secretKey: xiongmao
+jwt:
+    key: xiongmao
 
 mqtt:
     server: tcp://127.0.0.1:1883

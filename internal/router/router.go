@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 	"xiongmao/config"
-	"xiongmao/pkg/casbin"
 	"xiongmao/pkg/respond"
 )
 
@@ -51,35 +50,16 @@ func Init() {
 		claims := jwt.MapClaims{}
 
 		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return config.CasbinSecretKey, nil
+			return config.JwtKeyVar, nil
 		})
 
 		if err != nil || !token.Valid {
 			return respond.ErrorCode(respond.TokenExpire, respond.TokenExpireMsg)
 		}
 
-		casbin.Init()
-
 		c.Locals("user", claims)
 
 		return c.Next()
-
-		/*	// 检查权限
-			sub := "alice"  // 用户
-			obj := "/data1" // 路由
-			act := "GET"    // 操作
-
-			res, err := e.Enforce(sub, obj, act)
-
-			if err != nil {
-				log.SugarVar.Error("强制执行错误", err)
-			}
-
-			if res {
-				log.SugarVar.Error("授予访问权限")
-			} else {
-				log.SugarVar.Error("访问被拒绝")
-			}*/
 	})
 
 	admin(app)

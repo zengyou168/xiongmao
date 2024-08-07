@@ -42,7 +42,7 @@ func AdminLogin(req model.AdminLoginParam) model.AdminLoginVO {
 		"exp":  time.Now().Add(time.Hour * 72).Unix(),
 	})
 
-	tokenStr, err := token.SignedString(config.CasbinSecretKey)
+	tokenStr, err := token.SignedString(config.JwtKeyVar)
 
 	if err != nil {
 		panic(respond.Error("生成Token失败"))
