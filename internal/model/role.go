@@ -22,6 +22,13 @@ type RoleAddParam struct {
 	Name     string `json:"name,omitempty"`
 	Code     string `json:"code,omitempty"`
 	Describe string `json:"describe,omitempty"`
+	TenantId string `json:"tenantId,omitempty"`
+}
+
+// RoleEditParam 角色编辑请求参数
+type RoleEditParam struct {
+	ID string `json:"id,omitempty"`
+	RoleAddParam
 }
 
 // BeforeCreate GORM 钩子方法，生成 UUID

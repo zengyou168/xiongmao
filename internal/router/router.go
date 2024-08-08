@@ -3,7 +3,7 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
+	Jwt "github.com/golang-jwt/jwt/v5"
 	"sort"
 	"strconv"
 	"strings"
@@ -47,9 +47,9 @@ func Init() {
 		}
 
 		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
-		claims := jwt.MapClaims{}
+		mapClaims := Jwt.MapClaims{}
 
-		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+		token, err := Jwt.ParseWithClaims(tokenStr, mapClaims, func(token *Jwt.Token) (interface{}, error) {
 			return config.JwtKeyVar, nil
 		})
 
@@ -57,7 +57,7 @@ func Init() {
 			return respond.ErrorCode(respond.TokenExpire, respond.TokenExpireMsg)
 		}
 
-		c.Locals("user", claims)
+		config.UserJwt = mapClaims
 
 		return c.Next()
 	})

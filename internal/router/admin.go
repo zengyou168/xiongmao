@@ -16,7 +16,8 @@ func admin(app *fiber.App) {
 
 	roleRouter := app.Group("role")
 	{
-		roleRouter.Post("add", handler.RoleAdd) // 角色添加
+		roleRouter.Post("add", handler.RoleAdd)   // 角色添加
+		roleRouter.Post("edit", handler.RoleEdit) // 角色编辑
 	}
 
 }

@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/golang-jwt/jwt/v5"
+	Jwt "github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 	"xiongmao/config"
@@ -32,10 +32,11 @@ func AdminLogin(req model.AdminLoginParam) model.AdminLoginVO {
 	id := admin.ID
 	name := admin.Name
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":   id,
-		"name": name,
-		"exp":  time.Now().Add(time.Hour * 72).Unix(),
+	token := Jwt.NewWithClaims(Jwt.SigningMethodHS256, Jwt.MapClaims{
+		"id":       id,
+		"name":     name,
+		"tenantId": "1",
+		"exp":      time.Now().Add(time.Hour * 72).Unix(),
 	})
 
 	tokenStr, err := token.SignedString(config.JwtKeyVar)
